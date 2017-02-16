@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="DEG-8J-oGM">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="aMx-LE-Fwu">
+            <objects>
+                <navigationController id="DEG-8J-oGM" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sS8-Kv-ogb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="yze-Jl-isM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uVd-Tl-gd1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1666" y="9"/>
+        </scene>
+        <!--首页-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="ViewController" customModule="RNImageViewPlayerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eV1-44-sJv" customClass="RNImageViewPlayer" customModule="RNImageViewPlayerDemo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="64" width="375" height="128"/>
+                                <color key="backgroundColor" red="0.1819814891" green="0.69426733259999995" blue="0.53024792669999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="VyJ-je-Kji"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iIg-D1-ZXt">
+                                <rect key="frame" x="133.5" y="535" width="107" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="自定义cell视图">
+                                    <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="8wA-Lr-38s" kind="show" id="2Up-al-ntx"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="eV1-44-sJv" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="E3M-ZY-hko"/>
+                            <constraint firstAttribute="trailing" secondItem="eV1-44-sJv" secondAttribute="trailing" id="eR5-mY-5RR"/>
+                            <constraint firstItem="iIg-D1-ZXt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="iqE-E7-pki"/>
+                            <constraint firstItem="eV1-44-sJv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="qkr-la-Rbf"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="iIg-D1-ZXt" secondAttribute="bottom" constant="100" id="qtg-EP-tiR"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="首页" id="Dnj-pL-5TI"/>
+                    <connections>
+                        <outlet property="imagePlayer" destination="eV1-44-sJv" id="pCg-tD-ff2"/>
+                        <segue destination="OwE-Eh-UBZ" kind="show" identifier="DetailSegue" id="vaF-Ns-QoE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-556" y="22"/>
+        </scene>
+        <!--Custom View Controller-->
+        <scene sceneID="O3E-rz-Gmu">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="8wA-Lr-38s" customClass="CustomViewController" customModule="RNImageViewPlayerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zTn-ok-UJr"/>
+                        <viewControllerLayoutGuide type="bottom" id="n7v-wN-h2O"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0XV-eV-YB8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WQI-Aa-Pib" customClass="RNImageViewPlayer" customModule="RNImageViewPlayerDemo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="64" width="375" height="128"/>
+                                <color key="backgroundColor" red="0.1819814891" green="0.69426733259999995" blue="0.53024792669999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="ncE-sa-a1t"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WQI-Aa-Pib" firstAttribute="top" secondItem="zTn-ok-UJr" secondAttribute="bottom" id="Db0-Gt-wMg"/>
+                            <constraint firstAttribute="trailing" secondItem="WQI-Aa-Pib" secondAttribute="trailing" id="WPb-ok-Fsa"/>
+                            <constraint firstItem="WQI-Aa-Pib" firstAttribute="leading" secondItem="0XV-eV-YB8" secondAttribute="leading" id="xfh-Ey-KQe"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imagePlayer" destination="WQI-Aa-Pib" id="d6c-BC-1sp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UPq-cn-CN3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-556" y="722"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="Hv7-tu-yNA">
+            <objects>
+                <viewController id="OwE-Eh-UBZ" customClass="DetailViewController" customModule="RNImageViewPlayerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TDZ-6g-8tF"/>
+                        <viewControllerLayoutGuide type="bottom" id="DH7-xJ-TH0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eYF-sO-26T">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZUK-VK-jsj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="190" y="27"/>
+        </scene>
+    </scenes>
+</document>
