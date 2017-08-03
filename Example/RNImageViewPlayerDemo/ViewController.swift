@@ -32,7 +32,7 @@ class ViewController: UIViewController, RNImageViewPlayerDelegate {
         return self.images.count
     }
     
-    func imagePlayer(imagePlayer: RNImageViewPlayer, willLoadImageWith imageView: UIImageView, at index: Int) {
+    func imagePlayer(imagePlayer: RNImageViewPlayer, willLoadDefaultCellImageWith imageView: UIImageView, at index: Int) {
         imageView.image = UIImage(named: self.images[index])
     }
     

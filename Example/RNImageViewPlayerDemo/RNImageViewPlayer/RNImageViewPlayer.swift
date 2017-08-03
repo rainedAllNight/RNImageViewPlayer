@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum PageControlPosition {
+public enum PageControlPosition {
     case topLeft
     case topCenter
     case topRight
@@ -18,7 +18,7 @@ enum PageControlPosition {
     case custom(String, String) // you need use VFL string to set the layout
 }
 
-@objc protocol RNImageViewPlayerDelegate {
+@objc public protocol RNImageViewPlayerDelegate {
     // return the datasouce count, images count
     // 返回数据源大小
     func imagePlayerNumberOfItems(imagePlayer: RNImageViewPlayer) -> Int
@@ -28,8 +28,8 @@ enum PageControlPosition {
     @objc optional func imagePlayer(imagePlayer: RNImageViewPlayer, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     
     // when you are use the default cell, you need set the imageView in this func
-    // 将要展示某个imageView, imageView 的操作可以在这里进行
-    @objc optional func imagePlayer(imagePlayer: RNImageViewPlayer, willLoadImageWith imageView: UIImageView, at index: Int)
+    // 将要展示某个imageView, imageView 的操作可以在这里进行(使用defaultCell才会触发此回调)
+    @objc optional func imagePlayer(imagePlayer: RNImageViewPlayer, willLoadDefaultCellImageWith imageView: UIImageView, at index: Int)
     
     // did scroll at some item
     // 滑动到某个item
@@ -38,6 +38,13 @@ enum PageControlPosition {
     // did select item at index 
     // 选中某个Item
     @objc optional func imagePlayer(imagePlayer: RNImageViewPlayer, didSelectItemAt index: Int)
+}
+
+extension RNImageViewPlayerDelegate {
+    func imagePlayer(imagePlayer: RNImageViewPlayer, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let defaultCell = imagePlayer.collectionView?.dequeueReusableCell(withReuseIdentifier: "defaultCellReuseId", for: indexPath) as! RNImageViewPlayerCell
+        return defaultCell
+    }
 }
 
 class RNImageViewPlayerCell: UICollectionViewCell {
@@ -55,25 +62,25 @@ class RNImageViewPlayerCell: UICollectionViewCell {
     }
 }
 
-class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+open class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-    var collectionView: UICollectionView?
-    var timer: Timer?
-    var pageControl: UIPageControl?
-    weak var delegate: RNImageViewPlayerDelegate? {
+    public var collectionView: UICollectionView?
+    public var timer: Timer?
+    public var pageControl: UIPageControl?
+    weak open var delegate: RNImageViewPlayerDelegate? {
         didSet {
             self.initUI()
         }
     }
     
-    var defaultImageViewCell: RNImageViewPlayerCell?
-    var scrollInterval: Double = 2.5 // scroll interval, default is 2 seconds, set 0 to close scroll
-    var isHidePageControl = false // // hide pageControl, default is false
-    var isScroll = true // is need automatic scroll, default is true
-    var isEndlessScroll = true // is endless scroll, defaul is true
-    var pageControlPosition: PageControlPosition = .bottomCenter // pageControl postion, default is bottom right
-    var currentPgaeIndex = 0 // current index of items, default is first = 0
+    open var scrollInterval: Double = 2.5 // scroll interval, default is 2 seconds, set 0 to close scroll
+    open var isHidePageControl = false // // hide pageControl, default is false
+    open var isAutomaticScroll = true // is need automatic scroll, default is true
+    open var isEndlessScroll = true // is endless scroll, defaul is true
+    open var pageControlPosition: PageControlPosition = .bottomCenter // pageControl postion, default is bottom right
+    open var currentPgaeIndex = 0 // current index of items, default is first = 0
     private var itemCount = 0
+    private var defaultImageViewCell: RNImageViewPlayerCell?
     
     
     // MARK: - View life cycle
@@ -83,7 +90,7 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
         self.initUI()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.initUI()
     }
@@ -107,16 +114,16 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
         
         if self.itemCount <= 1 {
             // when itemCount is only one, don't add timer
-            self.isScroll = false
+            self.isAutomaticScroll = false
         } else {
-           self.isScroll = true
+           self.isAutomaticScroll = true
         }
         
         self.initCollectionView()
         self.initPageControl()
         
         weak var weakSelf = self
-        if isScroll, scrollInterval > 0, self.timer == nil {
+        if isAutomaticScroll, scrollInterval > 0, self.timer == nil {
             self.timer = Timer(timeInterval: scrollInterval, repeats: true, block: { (timer) in
                 weakSelf?.timerAction()
             })
@@ -209,9 +216,9 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
         self.pageControl = pageControl
     }
     
-    func restartTimer() {
+    private func restartTimer() {
         weak var weakSelf = self
-        if isScroll, scrollInterval > 0 {
+        if isAutomaticScroll, scrollInterval > 0 {
             self.timer = Timer(timeInterval: scrollInterval, repeats: true, block: { (timer) in
                 weakSelf?.timerAction()
             })
@@ -219,7 +226,7 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
-    func stopTimer() {
+    private func stopTimer() {
         self.timer?.invalidate()
         self.timer = nil
     }
@@ -240,16 +247,19 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     @objc private func pageControlClick(_ pageControl: UIPageControl) {
+        // 滑动时点击pageControl无效
+        guard self.collectionView?.isDragging == false else {
+            return
+        }
+        
         self.stopTimer()
         let pageIndex = pageControl.currentPage
-        print(pageIndex)
         self.collectionView?.scrollToItem(at: IndexPath(item: pageIndex, section: 0), at: .centeredHorizontally, animated: true)
-        self.restartTimer()
     }
     
     // MARK: - CollectionView Delegate
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var items = self.itemCount
         
         if self.isEndlessScroll, self.itemCount != 1 {
@@ -259,44 +269,45 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
         return items
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         var index = indexPath.item
         
         if index == self.itemCount {
             index = 0
         }
         
-        let customCell = self.delegate?.imagePlayer?(imagePlayer: self, cellForItemAt: IndexPath(item: index, section: 0))
+        var cell = self.delegate?.imagePlayer?(imagePlayer: self, cellForItemAt: IndexPath(item: index, section: 0))
         
-        if let customCell = customCell {
-            return customCell
-            
-        } else {
-            let defaultCell = collectionView.dequeueReusableCell(withReuseIdentifier: "defaultCellReuseId", for: indexPath) as! RNImageViewPlayerCell
-            self.delegate?.imagePlayer?(imagePlayer: self, willLoadImageWith: defaultCell.imageView, at: index)
-            return defaultCell
+        if cell == nil {
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "defaultCellReuseId", for: indexPath) as! RNImageViewPlayerCell
         }
+        
+        if let defaultCell = cell as? RNImageViewPlayerCell {
+            self.delegate?.imagePlayer?(imagePlayer: self, willLoadDefaultCellImageWith: defaultCell.imageView, at: index)
+        }
+        
+        return cell!
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.delegate?.imagePlayer?(imagePlayer: self, didSelectItemAt: indexPath.item)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.bounds.width, height: self.bounds.height)
     }
     
     // MARK: - ScrollView delegate
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.handlePageControlAndTimerWith(scrollView)
     }
     
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         self.handlePageControlAndTimerWith(scrollView)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let contentOffsetX = scrollView.contentOffset.x
         var index = Int(contentOffsetX/self.bounds.width)
         
@@ -308,7 +319,7 @@ class RNImageViewPlayer: UIView, UICollectionViewDelegate, UICollectionViewDataS
         self.pageControl?.currentPage = index
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         self.stopTimer()
     }
     
