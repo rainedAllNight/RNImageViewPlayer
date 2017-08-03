@@ -11,15 +11,15 @@
 ## How to use
 **代码添加RNImageViewPlayer或者在storyBoard/xib中继承RNImageViewPlayer，并设置代理**
 
-####可配置项
+### 可配置项
 * **scrollInterval：** 自动滑动的时间间隔，默认为2.5s
-* **isHidePageControl：**是否隐藏pageController，默认不隐藏
-* **isAutomaticScroll：**是否自动滑动，默认为true
+* **isHidePageControl：** 是否隐藏pageController，默认不隐藏
+* **isAutomaticScroll：** 是否自动滑动，默认为true
 * **isEndlessScroll：** 是否无限轮播，默认为true
-* **pageControlPosition：**pageController位置，详见**PageControlPosition枚举**
-* **currentPgaeIndex：**显示的位置，默认为0显示第一个
+* **pageControlPosition：** pageController位置，详见**PageControlPosition枚举**
+* **currentPgaeIndex：** 显示的位置，默认为0显示第一个
 
-#### Delegate
+### Delegate
 
 ```
 // 数据源大小，images count
